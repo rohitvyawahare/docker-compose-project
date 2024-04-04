@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  wiki:
+    image: requarks/wiki:2
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASS=mypassword
+      - DB_NAME=mywikidb
+    volumes:
+      - ./data:/var/wiki/data
+      - ./config:/var/wiki/config
+      - ./public:/var/wiki/public
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mywikidb
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
